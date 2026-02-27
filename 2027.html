@@ -46,7 +46,7 @@ let data = [];
 
 async function loadData() {
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbyAEWA9wZJUq1RmixF_aXaooYaeXdZMowgmAUEbXAOqbACbWFYMM9SpuoDakm9H0OHA/exec");
+    const response = await fetch("https://script.google.com/macros/s/AKfycbz1iCkYbv2UD4-UMVmJ5C_2IunvuEfkWDHbftddJYpx2-r52txRArCqCuCjNP-arc0e/exec");
     if (!response.ok) throw new Error("網路錯誤：" + response.status);
 
     const raw = await response.json();
@@ -212,4 +212,5 @@ function restartQuiz() {
   generateQuestions();
   showQuestion();
 }
+
 </script>
