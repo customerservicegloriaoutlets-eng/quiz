@@ -45,19 +45,31 @@ button {
 let data = [];
 
 async function loadData() {
-  const response = await fetch("https://script.google.com/macros/s/AKfycbzUImVC1MJ1av0esYAMojYI7etSWP-w1ERGjqpukZCB3UaSFOBkTsMkB0AF6LagalOn/exec");
-  const raw = await response.json();
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbyAEWA9wZJUq1RmixF_aXaooYaeXdZMowgmAUEbXAOqbACbWFYMM9SpuoDakm9H0OHA/exec");
+    if (!response.ok) throw new Error("網路錯誤：" + response.status);
 
-  data = raw
-    .filter(row => row["店名"] && row["位置"] && row["商品"]) // 過濾空白列
-    .map(row => ({
-      name: row["店名"],
-      location: row["位置"],
-      product: row["商品"],
-      booth: row["櫃號"]
-    }));
+    const raw = await response.json();
 
-  restartQuiz();
+    data = raw
+      .filter(row => row["店名"] && row["位置"] && row["商品"]) // 過濾空白列
+      .map(row => ({
+        name: row["店名"],
+        location: row["位置"],
+        product: row["商品"],
+        booth: row["櫃號"]
+      }));
+
+    if (data.length === 0) {
+      document.getElementById("quiz").innerHTML = "<p>沒有題目資料，請檢查 Google Sheet。</p>";
+      return;
+    }
+
+    restartQuiz(); // ✅ 只有資料抓到後才開始測驗
+  } catch (err) {
+    console.error("題目載入失敗:", err);
+    document.getElementById("quiz").innerHTML = "<p>題目載入失敗，請稍後重試。</p>";
+  }
 }
 
 loadData();
@@ -200,6 +212,4 @@ function restartQuiz() {
   generateQuestions();
   showQuestion();
 }
-restartQuiz();
 </script>
-
